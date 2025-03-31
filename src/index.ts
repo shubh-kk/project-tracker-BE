@@ -1,11 +1,14 @@
 import express from 'express';
 import  jwt  from 'jsonwebtoken'
+import cors from 'cors'
+
 const app = express();
 const JWT_SECRET = "mysecretpassword" ;
 
+app.use(cors())
 app.use(express.json());
 
-app.post("/signup", (req, res) => {
+app.post("/api/v1/signup", (req, res) => {
     const email = req.body.email ;
     const password = req.body.password ;
     //db validation

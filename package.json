@@ -21,9 +21,11 @@
   "homepage": "https://github.com/shubh-kk/project-tracker-BE#readme",
   "description": "",
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^6.5.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
