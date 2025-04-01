@@ -1,30 +1,23 @@
 import express from 'express';
 import  jwt  from 'jsonwebtoken'
 import cors from 'cors'
+import user from "../routes/user"
+import projects from "../routes/projects"
+import task from "../routes/task"
+import 'dotenv/config'
 
 const app = express();
-const JWT_SECRET = "mysecretpassword" ;
+const router = express.Router();
+// const JWT_SECRET = "mysecretpassword" ;
 
 app.use(cors())
 app.use(express.json());
 
-app.post("/api/v1/signup", (req, res) => {
-    const email = req.body.email ;
-    const password = req.body.password ;
-    //db validation
-    try {
-        const token = jwt.sign(email, JWT_SECRET)
-        res.json({
-            "msg": "Signin Successful",
-            token
-        })
-        console.log(`Token for user ${email} is ${token}`);
-        return ;
-        
-    } catch (error) {
-        console.log("Error occued while signin!!");
-        return;
-    }    
-});
+app.use("/api/v1/user", user);
+app.use("/api/v1/projects", projects);
+app.use("/api/v1/task", task) ;
 
-app.listen((3000))
+
+app.listen(process.env.PORT,() => {
+    console.log(`running`)
+})
