@@ -1,14 +1,13 @@
 import express from 'express';
 import  jwt  from 'jsonwebtoken'
 import cors from 'cors'
-import user from "../routes/user"
-import projects from "../routes/projects"
-import task from "../routes/task"
+import user from "./routes/user"
+import projects from "./routes/projects"
+import task from "./routes/task"
 import 'dotenv/config'
 
 const app = express();
 const router = express.Router();
-// const JWT_SECRET = "mysecretpassword" ;
 
 app.use(cors())
 app.use(express.json());
