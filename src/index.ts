@@ -2,7 +2,7 @@ import express from 'express';
 import  jwt  from 'jsonwebtoken'
 import cors from 'cors'
 import user from "./routes/user"
-import projects from "./routes/projects"
+import projects from "./routes/project"
 import task from "./routes/task"
 import 'dotenv/config'
 
