@@ -1,20 +1,22 @@
-import { Request, Response, Router } from 'express' ;
+import { Request, Response, Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient() ;
-const router = Router() ;
+const verifyToken = require("../middleware")
+const prisma = new PrismaClient();
+const router = Router();
 
 // POST /projects -- add projects
-router.post("/", async (req: Request, res: Response):Promise<any> => {
-    const { title, userId } = req.body;
-    // const { token } = req.headers.authorization ; //if the user has logged in or jwt
-
-
-    if (!userId || !title) {
-       res.status(400).json({ msg: "Provide a Project Title & userId!!" });
-        return ;
-    }
+router.post("/", verifyToken,  async (req: Request, res: Response): Promise<any> => {
+    const { title } = req.body;
+    const userId  = req.userId as string;
+    console.log("UserId is: ", userId);
     
+
+    if (!title) {
+        res.status(400).json({ msg: "Provide a Project Title!!" });
+        return;
+    }
+
     try {
         const project = await prisma.project.create({
             data: { title, userId }
@@ -23,7 +25,7 @@ router.post("/", async (req: Request, res: Response):Promise<any> => {
         return res.status(201).json({
             msg: "Project Added Successfully!!",
             project
-        })        
+        })
     } catch (error) {
         return res.status(400).json({
             msg: "Failed to add Project, Error Occured!!",
@@ -33,14 +35,12 @@ router.post("/", async (req: Request, res: Response):Promise<any> => {
 })
 
 // GET /projects
-router.get("/all", async (req: Request, res: Response): Promise<any> => {
+router.get("/all", verifyToken, async (req: Request, res: Response): Promise<any> => {
     const userId = req.query.userId as string;
-    // const { token } = req.headers.authorization ; //if the user has logged in or jwt
-
 
     if (!userId) {
-       res.status(400).json({ msg: "Provide a userId in query params!!" });
-       return ;
+        res.status(400).json({ msg: "Provide a userId in query params!!" });
+        return;
     }
 
     try {
@@ -89,14 +89,12 @@ router.get("/all", async (req: Request, res: Response): Promise<any> => {
 })
 
 // DELETE /api/projects/:id
-router.delete("/:projectId", async (req: Request, res, Response): Promise<any> => {
-    const { projectId } = req.params ;
+router.delete("/:projectId", verifyToken, async (req: Request, res: Response): Promise<any> => {
+    const { projectId } = req.params;
     const userId = req.query.userId as string;
-    // const { token } = req.headers.authorization ; //if the user has logged in or jwt
 
-
-    if(!projectId || !userId){
-       return res.status(400).json({ msg: "Provide UserID and ProjectId in query params!!" })
+    if (!projectId || !userId) {
+        return res.status(400).json({ msg: "Provide UserID and ProjectId in query params!!" })
     }
 
     try {
@@ -112,7 +110,7 @@ router.delete("/:projectId", async (req: Request, res, Response): Promise<any> =
         }
 
         const existingProject = await prisma.project.findUnique({
-            where: {id: projectId}
+            where: { id: projectId }
         })
 
         if (!existingProject) {
@@ -142,4 +140,4 @@ router.delete("/:projectId", async (req: Request, res, Response): Promise<any> =
 
 })
 
-export default router ;
+export default router;

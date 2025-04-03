@@ -1,19 +1,23 @@
 import { NextFunction, Request, Response } from "express";
+import 'dotenv/config'
 
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRETE ;
 
-function verifyToken(req: Request, res: Response, next: NextFunction) {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: 'Access denied' });
+export default function verifyToken (req: Request, res: Response, next: NextFunction) {
+
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ msg: 'Authorization token required' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        //@ts-ignore
-        req.userId = decoded.userId ;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.userId as string; // Assuming the token contains a userId field;
         next();
     } catch (error) {
         res.status(401).json({ error: 'Invalid token' });
     }
 };
-
-module.exports = verifyToken;

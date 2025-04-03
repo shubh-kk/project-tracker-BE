@@ -8,9 +8,9 @@ const router = Router();
 const prisma = new PrismaClient();
 
 const saltRounds = 5;
-const JWT_SECRET = process.env.JWT_SECRET;;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-async function makeHashedpassword(password: string): Promise<string> {
+async function makeHashedpassword(password: string) {
     return await bcrypt.hash(password, saltRounds)
 }
 
@@ -34,10 +34,16 @@ router.post("/signup", async (req: Request, res: Response) => {
             }
         })
 
+        if (!user) {
+            res.status(400).json({
+                msg: "Please provide email and password"
+            })
+        }
+
         const token = jwt.sign({ userId: user.id }, JWT_SECRET);
 
         res.status(201).json({
-            msg: "Signup Success!!",
+            msg: "User registered successfully",
             token
         })
     } catch (error) {

@@ -13,9 +13,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/api/v1/user", user);
 app.use("/api/v1/projects", projects);
-app.use("/api/v1/task", task) ;
+app.use("/api/v1/task", task);
 
 
-app.listen(PORT,() => {
+app.listen(PORT, () => {
     console.log(`running`)
 })

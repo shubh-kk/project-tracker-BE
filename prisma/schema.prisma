@@ -12,6 +12,7 @@ model User {
   email     String    @unique
   password  String
   createdAt DateTime  @default(now())
+
   projects  Project[]
 }
 
@@ -19,6 +20,7 @@ model Project {
   id     String @id @default(uuid())
   title  String
   userId String
+
   user   User   @relation(fields: [userId], references: [id])
   tasks  Task[]
 }
@@ -29,5 +31,6 @@ model Task {
   title      String
   createdAt  DateTime @default(now())
   isComplete Boolean  @default(false)
+  
   project    Project  @relation(fields: [projectId], references: [id])
 }
