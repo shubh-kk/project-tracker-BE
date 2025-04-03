@@ -9,8 +9,6 @@ const router = Router();
 router.post("/", verifyToken,  async (req: Request, res: Response): Promise<any> => {
     const { title } = req.body;
     const userId  = req.userId as string;
-    console.log("UserId is: ", userId);
-    
 
     if (!title) {
         res.status(400).json({ msg: "Provide a Project Title!!" });
@@ -36,7 +34,7 @@ router.post("/", verifyToken,  async (req: Request, res: Response): Promise<any>
 
 // GET /projects
 router.get("/all", verifyToken, async (req: Request, res: Response): Promise<any> => {
-    const userId = req.query.userId as string;
+    const userId = req.userId;
 
     if (!userId) {
         res.status(400).json({ msg: "Provide a userId in query params!!" });
@@ -91,7 +89,7 @@ router.get("/all", verifyToken, async (req: Request, res: Response): Promise<any
 // DELETE /api/projects/:id
 router.delete("/:projectId", verifyToken, async (req: Request, res: Response): Promise<any> => {
     const { projectId } = req.params;
-    const userId = req.query.userId as string;
+    const userId = req.userId as string;
 
     if (!projectId || !userId) {
         return res.status(400).json({ msg: "Provide UserID and ProjectId in query params!!" })
