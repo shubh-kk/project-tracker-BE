@@ -53,12 +53,29 @@ router.post("/", verifyToken, async (req: Request, res: Response) => {
 // PATCH /api/tasks/:id (toggle complete)
 router.patch("/:taskId", verifyToken, async (req: Request, res: Response): Promise<any> => {
     const { taskId } = req.params;
+    const projectId = req.query.projectId as string;
+
+    if (!taskId || !projectId) {
+        res.status(400).json({ msg: "Provide a taskID in URL & ProjectId in query params!!" });
+        return;
+    }
 
     try {
+        const project = await prisma.project.findUnique({
+            where: {
+                id: projectId
+            }
+        })
+        if (!project) {
+            res.status(400).json({
+                msg: `Projects not found with given projectid: ${projectId}`
+            })
+            return;
+        }
         const task = await prisma.task.findUnique({
             where: { id: taskId }
         })
-
+        
         if (!task) {
             return res.status(404).json({
                 msg: `Task not found or not given taskId`
